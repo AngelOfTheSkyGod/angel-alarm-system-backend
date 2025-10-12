@@ -12,6 +12,6 @@ import java.io.IOException;
 public class AngelAlarmSystemController {
     @PostMapping("/connect")
     public void connect(@RequestBody AASData aasData) throws IOException {
-        System.out.println(aasData);
+        System.out.println(aasData.getAlarmData() + "\n" + aasData.getCalendarData() + aasData.getUsername() + aasData.getPassword());
     }
 }
