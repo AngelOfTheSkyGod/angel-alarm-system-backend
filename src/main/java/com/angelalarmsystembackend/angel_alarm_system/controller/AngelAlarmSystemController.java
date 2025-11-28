@@ -13,5 +13,11 @@ public class AngelAlarmSystemController {
     @PostMapping("/connect")
     public void connect(@RequestBody AASData aasData) throws IOException {
         System.out.println(aasData.getAlarmData() + "\n" + aasData.getCalendarData() + aasData.getUsername() + aasData.getPassword());
+
     }
+
+     @PostMapping("/espConnect")
+     public void espConnect(@RequestBody String data) throws IOException{
+	System.out.println("data: " + data);
+     }
 }
