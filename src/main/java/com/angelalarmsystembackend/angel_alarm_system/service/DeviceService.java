@@ -40,7 +40,7 @@ public class DeviceService {
         }
         System.out.println("ip address of client: " + aasData.getRemoteAddr());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
-        if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
+        if (deviceClient != null && AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
             DeviceClient.sendPing(aasData.getRemoteAddr(), aasData);
             clientToMachineMap.put(aasData.getRemoteAddr(), deviceClient);
         }
