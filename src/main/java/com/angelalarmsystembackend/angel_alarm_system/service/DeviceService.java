@@ -18,10 +18,8 @@ public class DeviceService {
     private static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if (!devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
-            System.err.println("is not a local ip address or device is already in the system" + deviceData.getIpAddress() + "is local address? " + IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress()));
-            System.err.println("is in use?" + !devices.contains(deviceData));
-
+        if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
+            System.err.println("is not a local ip address or device is already in the system");
             return;
         }
         String[] saltAndHash = AccountUtils.storePassword(deviceData.getPassword());
