@@ -19,7 +19,9 @@ public class DeviceService {
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (!devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
-            System.err.println("is not a local ip address or device is already in the system" + deviceData.getIpAddress());
+            System.err.println("is not a local ip address or device is already in the system" + deviceData.getIpAddress() + "is local address? " + IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress()));
+            System.err.println("is in use?" + !devices.contains(deviceData));
+
             return;
         }
         String[] saltAndHash = AccountUtils.storePassword(deviceData.getPassword());
