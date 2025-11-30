@@ -15,7 +15,7 @@ import java.util.*;
 public class DeviceService {
     private static final Set<DeviceData> devices = new HashSet<>();
     private static final Map<String, DeviceClientData> deviceNameToDeviceClientData = new HashMap<>();
-    private static final Map<String, DeviceData> clientToMachineMap = new HashMap<String, DeviceData>();
+    private static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (!devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
@@ -41,6 +41,7 @@ public class DeviceService {
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
         if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
             DeviceClient.sendPing(aasData.getRemoteAddr(), aasData);
+            clientToMachineMap.put(aasData.getRemoteAddr(), deviceClient);
         }
     }
 }
