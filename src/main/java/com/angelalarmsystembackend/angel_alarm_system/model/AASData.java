@@ -15,5 +15,5 @@ public class AASData {
     private List<AlarmDataRowData> alarmData;
     private List<CalendarDataRowData> calendarData;
     private List<SlideShowPictureData> slideShowData;
-    private String identifier;
+    private String userIdentifier;
 }
