@@ -1,4 +1,4 @@
-package com.angelalarmsystembackend.angel_alarm_system.controller.model;
+package com.angelalarmsystembackend.angel_alarm_system.model;
 
 import lombok.*;
 
@@ -12,5 +12,3 @@ import java.util.List;
 public class SlideShowPictureData {
     private List<Integer> imageArray;
 }
-
-//    imageArray: number[];

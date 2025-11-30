@@ -1,4 +1,4 @@
-package com.angelalarmsystembackend.angel_alarm_system.controller.model;
+package com.angelalarmsystembackend.angel_alarm_system.model;
 
 import lombok.*;
 

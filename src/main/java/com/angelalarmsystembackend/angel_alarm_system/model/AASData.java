@@ -1,8 +1,8 @@
-package com.angelalarmsystembackend.angel_alarm_system.controller.model;
+package com.angelalarmsystembackend.angel_alarm_system.model;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -15,9 +15,5 @@ public class AASData {
     private List<AlarmDataRowData> alarmData;
     private List<CalendarDataRowData> calendarData;
     private List<SlideShowPictureData> slideShowData;
+    private String remoteAddr;
 }
-//  username: string;
-//          password: string;
-//          alarmData: AlarmDataRowData[];
-//          calendarData: CalendarDataRowData[];
-//          slideShowData: SlideShowPictureData[];
