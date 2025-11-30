@@ -38,6 +38,7 @@ public class DeviceService {
             System.err.println("user is connected to a device already.");
             return;
         }
+        System.out.println("ip address of client: " + aasData.getRemoteAddr());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
         if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
             DeviceClient.sendPing(aasData.getRemoteAddr(), aasData);
