@@ -34,15 +34,15 @@ public class DeviceService {
     }
 
     public static void connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        if (clientToMachineMap.get(aasData.getRemoteAddr()) != null){
+        if (clientToMachineMap.get(aasData.getIdentifier()) != null){
             System.err.println("user is connected to a device already.");
             return;
         }
-        System.out.println("ip address of client: " + aasData.getRemoteAddr());
+        System.out.println("identifier of client: " + aasData.getIdentifier());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
         if (deviceClient != null && AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
-            DeviceClient.sendPing(aasData.getRemoteAddr(), aasData);
-            clientToMachineMap.put(aasData.getRemoteAddr(), deviceClient);
+            clientToMachineMap.put(aasData.getIdentifier(), deviceClient);
+            DeviceClient.sendPing(deviceClient.getIpAddress(), aasData);
         }
     }
 }
