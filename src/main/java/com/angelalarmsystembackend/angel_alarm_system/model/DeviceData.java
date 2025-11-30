@@ -12,6 +12,4 @@ public class DeviceData {
     private String deviceName;
     private String password;
     private String ipAddress;
-    private String passwordHash;
-    private String salt;
 }
