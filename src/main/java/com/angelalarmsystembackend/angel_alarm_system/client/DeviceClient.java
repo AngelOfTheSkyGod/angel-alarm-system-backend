@@ -13,7 +13,6 @@ public class DeviceClient {
     public static void sendPing(String pathName, AASData aasData) throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         String requestBody = objectMapper.writeValueAsString(aasData);
-
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .uri(URI.create("http://" + pathName + "/ping"))

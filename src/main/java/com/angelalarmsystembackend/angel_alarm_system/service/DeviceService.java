@@ -40,7 +40,9 @@ public class DeviceService {
         }
         System.out.println("identifier of client: " + aasData.getUserIdentifier());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
+        System.out.println("indexing client client: " + deviceClient.getDeviceName());
         if (deviceClient != null && AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
+            System.out.println("sending ping to device client: " + deviceClient.getDeviceName());
             clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
             DeviceClient.sendPing(deviceClient.getIpAddress(), aasData);
         }
