@@ -4,7 +4,9 @@ import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
 import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -40,14 +42,22 @@ public class DeviceClient {
                 .header("Content-Type", "application/json")
                 .build();
         System.out.println("path name: " + pathName);
-        HttpResponse<byte[]> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofByteArray());
-        System.out.println("sending data");
-        byte[] bodyBytes = response.body();
-        System.out.println("got the response body!");
-        String json = new String(bodyBytes, StandardCharsets.UTF_8);
+        HttpResponse<InputStream> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofInputStream());
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, SlideShowData.class);
+        try (InputStream is = response.body()) {
+            // Read in chunks
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[4096];
+            int n;
+            while ((n = is.read(chunk)) != -1) {
+                buffer.write(chunk, 0, n);
+            }
+            byte[] bodyBytes = buffer.toByteArray();
+
+            String json = new String(bodyBytes, StandardCharsets.UTF_8);
+            SlideShowData obj = new ObjectMapper().readValue(json, SlideShowData.class);
+            return obj;
+        }
     }
 }
