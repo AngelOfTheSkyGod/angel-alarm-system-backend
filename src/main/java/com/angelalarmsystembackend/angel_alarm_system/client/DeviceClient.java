@@ -33,11 +33,9 @@ public class DeviceClient {
     }
 
 
-    public static SlideShowData sendConnect(String pathName, AASData aasData) throws IOException, InterruptedException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(aasData);
+    public static SlideShowData sendConnect(String pathName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .GET()
                 .uri(URI.create("http://" + pathName + "/connect"))
                 .header("Content-Type", "application/json")
                 .build();

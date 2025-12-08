@@ -45,7 +45,7 @@ public class DeviceService {
         if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
             System.out.println("sending ping to device client: " + deviceClient.getDeviceName());
             clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
-            return DeviceClient.sendConnect(deviceClient.getIpAddress(), aasData);
+            return DeviceClient.sendConnect(deviceClient.getIpAddress());
         }
         return null;
     }
