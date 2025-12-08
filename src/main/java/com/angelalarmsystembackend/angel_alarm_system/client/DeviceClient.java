@@ -40,7 +40,7 @@ public class DeviceClient {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.statusCode());
+        System.out.println(response.body());
         return (SlideShowData) response;
     }
 }
