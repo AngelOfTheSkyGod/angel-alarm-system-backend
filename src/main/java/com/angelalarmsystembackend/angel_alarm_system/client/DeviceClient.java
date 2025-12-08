@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DeviceClient {
     public static void sendPing(String pathName, AASData aasData) throws IOException, InterruptedException {
@@ -39,8 +40,11 @@ public class DeviceClient {
         System.out.println("path name: " + pathName);
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
+        String jsonBody = response.body();
 
+        ObjectMapper mapper = new ObjectMapper();
+        SlideShowData obj = mapper.readValue(jsonBody, SlideShowData.class);
         System.out.println("body: " + response.body());
-        return (SlideShowData) response;
+        return obj;
     }
 }
