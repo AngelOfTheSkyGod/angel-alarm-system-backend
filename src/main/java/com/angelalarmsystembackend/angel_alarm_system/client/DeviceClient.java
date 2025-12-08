@@ -42,7 +42,7 @@ public class DeviceClient {
         System.out.println("path name: " + pathName);
         HttpResponse<byte[]> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofByteArray());
-
+        System.out.println("sending data");
         byte[] bodyBytes = response.body();
         System.out.println("got the response body!");
         String json = new String(bodyBytes, StandardCharsets.UTF_8);
