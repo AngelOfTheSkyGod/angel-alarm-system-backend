@@ -41,7 +41,6 @@ public class DeviceClient {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
         String jsonBody = response.body();
-        System.out.println("body: " + response.body());
 
         ObjectMapper mapper = new ObjectMapper();
         SlideShowData obj = mapper.readValue(jsonBody, SlideShowData.class);
