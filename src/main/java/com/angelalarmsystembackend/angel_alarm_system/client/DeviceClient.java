@@ -1,6 +1,7 @@
 package com.angelalarmsystembackend.angel_alarm_system.client;
 
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
+import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -24,5 +25,22 @@ public class DeviceClient {
 
         System.out.println(response.statusCode());
 
+    }
+
+
+    public static SlideShowData sendConnect(String pathName, AASData aasData) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(aasData);
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create("http://" + pathName + "/ping"))
+                .header("Content-Type", "application/json")
+                .build();
+        System.out.println("path name: " + pathName);
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.statusCode());
+        return (SlideShowData) response;
     }
 }

@@ -4,6 +4,7 @@ import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
 import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
 import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
+import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
 import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
 import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
 
@@ -33,18 +34,19 @@ public class DeviceService {
                 .build());
     }
 
-    public static void connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+    public static SlideShowData connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
         if (clientToMachineMap.get(aasData.getUserIdentifier()) != null && !clientToMachineMap.get(aasData.getUserIdentifier()).getDeviceName().equalsIgnoreCase(aasData.getUsername())){
             System.err.println("user is connected to a device already.");
-            return;
+            return null;
         }
         System.out.println("identifier of client: " + aasData.getUserIdentifier());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
         System.out.println("indexing client client: " + deviceClient.getDeviceName());
-        if (deviceClient != null && AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
+        if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
             System.out.println("sending ping to device client: " + deviceClient.getDeviceName());
             clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
-            DeviceClient.sendPing(deviceClient.getIpAddress(), aasData);
+            return DeviceClient.sendConnect(deviceClient.getIpAddress(), aasData);
         }
+        return null;
     }
 }
