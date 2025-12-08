@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class SlideShowPictureData {
-    private List<Integer> imageArray;
+    private String imageDataUrl;
 }
