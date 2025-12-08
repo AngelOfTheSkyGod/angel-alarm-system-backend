@@ -44,6 +44,7 @@ public class DeviceClient {
                 .send(request, HttpResponse.BodyHandlers.ofByteArray());
 
         byte[] bodyBytes = response.body();
+        System.out.println("got the response body!");
         String json = new String(bodyBytes, StandardCharsets.UTF_8);
 
         ObjectMapper mapper = new ObjectMapper();
