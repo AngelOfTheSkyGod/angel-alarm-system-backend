@@ -44,7 +44,7 @@ public class DeviceClient {
         System.out.println("path name: " + pathName);
         HttpResponse<InputStream> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofInputStream());
-
+        System.out.println("sent data: " + pathName);
         try (InputStream is = response.body()) {
             // Read in chunks
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
