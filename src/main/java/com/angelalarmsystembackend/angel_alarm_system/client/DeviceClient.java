@@ -33,7 +33,7 @@ public class DeviceClient {
         String requestBody = objectMapper.writeValueAsString(aasData);
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create("http://" + pathName + "/ping"))
+                .uri(URI.create("http://" + pathName + "/connect"))
                 .header("Content-Type", "application/json")
                 .build();
         System.out.println("path name: " + pathName);
