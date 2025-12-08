@@ -9,6 +9,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DeviceClient {
@@ -38,12 +40,13 @@ public class DeviceClient {
                 .header("Content-Type", "application/json")
                 .build();
         System.out.println("path name: " + pathName);
-        HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        String jsonBody = response.body();
+        HttpResponse<byte[]> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+        byte[] bodyBytes = response.body();
+        String json = new String(bodyBytes, StandardCharsets.UTF_8);
 
         ObjectMapper mapper = new ObjectMapper();
-        SlideShowData obj = mapper.readValue(jsonBody, SlideShowData.class);
-        return obj;
+        return mapper.readValue(json, SlideShowData.class);
     }
 }
