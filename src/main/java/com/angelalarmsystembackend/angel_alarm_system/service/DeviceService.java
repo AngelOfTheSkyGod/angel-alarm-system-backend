@@ -40,7 +40,7 @@ public class DeviceService {
         return DeviceClient.sendConnect(deviceClient.getIpAddress());
     }
 
-    public static SlideShowData addImage(AddImageRequest addImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+    public static ImageRequestResponse addImage(AddImageRequest addImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
         if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
             return null;
         }

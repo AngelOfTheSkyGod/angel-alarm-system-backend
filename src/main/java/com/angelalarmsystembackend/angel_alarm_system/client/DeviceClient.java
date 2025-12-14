@@ -1,6 +1,7 @@
 package com.angelalarmsystembackend.angel_alarm_system.client;
 
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
+import com.angelalarmsystembackend.angel_alarm_system.model.ImageRequestResponse;
 import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
 import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowPictureData;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +54,7 @@ public class DeviceClient {
         }
     }
 
-    public static SlideShowData addImage(String pathName, String imageDataUrl) throws IOException, InterruptedException {
+    public static ImageRequestResponse addImage(String pathName, String imageDataUrl) throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         String requestBody = objectMapper.writeValueAsString(SlideShowPictureData.builder().imageDataUrl(imageDataUrl).build());
         HttpRequest request = HttpRequest.newBuilder()
@@ -64,6 +65,9 @@ public class DeviceClient {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-        return (SlideShowData) response;
+        return objectMapper.readValue(
+                response.body(),
+                ImageRequestResponse.class
+        );
     }
 }

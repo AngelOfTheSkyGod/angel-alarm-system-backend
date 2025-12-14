@@ -12,8 +12,8 @@ import java.util.*;
 public class AASData {
     private String username;
     private String password;
+    private String userIdentifier;
     private List<AlarmDataRowData> alarmData;
     private List<CalendarDataRowData> calendarData;
     private List<SlideShowPictureData> slideShowData;
-    private String userIdentifier;
 }
