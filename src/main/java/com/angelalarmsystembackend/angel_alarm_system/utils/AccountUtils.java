@@ -1,4 +1,7 @@
 package com.angelalarmsystembackend.angel_alarm_system.utils;
+import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
+import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -56,6 +59,15 @@ public class AccountUtils {
         byte[] salt = Base64.getDecoder().decode(storedSalt);
         String hash = hashPassword(password, salt);
         return hash.equals(storedHash);
+    }
+
+    public static boolean isAuthenticated(String userIdentifier, String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (DeviceService.clientToMachineMap.get(userIdentifier) != null && !DeviceService.clientToMachineMap.get(userIdentifier).getDeviceName().equalsIgnoreCase(username)){
+            System.err.println("user is connected to a device already.");
+            return false;
+        }
+        DeviceClientData deviceClient = DeviceService.deviceNameToDeviceClientData.get(username);
+        return (verifyPassword(password, deviceClient.getSalt(), deviceClient.getPasswordHash()));
     }
 
 }

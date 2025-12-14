@@ -2,6 +2,7 @@ package com.angelalarmsystembackend.angel_alarm_system.client;
 
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
 import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
+import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowPictureData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
@@ -12,8 +13,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DeviceClient {
     public static void sendPing(String pathName, AASData aasData) throws IOException, InterruptedException {
@@ -32,17 +31,14 @@ public class DeviceClient {
 
     }
 
-
     public static SlideShowData sendConnect(String pathName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create("http://" + pathName + "/connect"))
                 .header("Content-Type", "application/json")
                 .build();
-        System.out.println("path name: " + pathName);
         HttpResponse<InputStream> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofInputStream());
-        System.out.println("sent data: " + pathName);
         try (InputStream is = response.body()) {
             // Read in chunks
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -51,11 +47,23 @@ public class DeviceClient {
             while ((n = is.read(chunk)) != -1) {
                 buffer.write(chunk, 0, n);
             }
-            byte[] bodyBytes = buffer.toByteArray();
 
-            String json = new String(bodyBytes, StandardCharsets.UTF_8);
-            SlideShowData obj = new ObjectMapper().readValue(json, SlideShowData.class);
-            return obj;
+            String json = buffer.toString(StandardCharsets.UTF_8);
+            return new ObjectMapper().readValue(json, SlideShowData.class);
         }
+    }
+
+    public static SlideShowData addImage(String pathName, String imageDataUrl) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(SlideShowPictureData.builder().imageDataUrl(imageDataUrl).build());
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create("http://" + pathName + "/addImage"))
+                .header("Content-Type", "application/json")
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return (SlideShowData) response;
     }
 }

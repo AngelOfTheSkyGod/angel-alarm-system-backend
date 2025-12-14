@@ -1,10 +1,7 @@
 package com.angelalarmsystembackend.angel_alarm_system.service;
 
 import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
-import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
-import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
-import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
-import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
+import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
 import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
 
@@ -14,9 +11,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class DeviceService {
-    private static final Set<DeviceData> devices = new HashSet<>();
-    private static final Map<String, DeviceClientData> deviceNameToDeviceClientData = new HashMap<>();
-    private static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
+    public static final Set<DeviceData> devices = new HashSet<>();
+    public static final Map<String, DeviceClientData> deviceNameToDeviceClientData = new HashMap<>();
+    public static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
@@ -35,18 +32,20 @@ public class DeviceService {
     }
 
     public static SlideShowData connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        if (clientToMachineMap.get(aasData.getUserIdentifier()) != null && !clientToMachineMap.get(aasData.getUserIdentifier()).getDeviceName().equalsIgnoreCase(aasData.getUsername())){
-            System.err.println("user is connected to a device already.");
+        if (!AccountUtils.isAuthenticated(aasData.getUserIdentifier(), aasData.getUsername(), aasData.getPassword())){
             return null;
         }
-        System.out.println("identifier of client: " + aasData.getUserIdentifier());
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
-        System.out.println("indexing client client: " + deviceClient.getDeviceName());
-        if (AccountUtils.verifyPassword(aasData.getPassword(), deviceClient.getSalt(), deviceClient.getPasswordHash())){
-            System.out.println("sending ping to device client: " + deviceClient.getDeviceName());
-            clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
-            return DeviceClient.sendConnect(deviceClient.getIpAddress());
+        clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
+        return DeviceClient.sendConnect(deviceClient.getIpAddress());
+    }
+
+    public static SlideShowData addImage(AddImageRequest addImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+        if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
+            return null;
         }
-        return null;
+
+        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
+        return DeviceClient.addImage(deviceClient.getIpAddress(), addImageRequest.getImageDataUrl());
     }
 }

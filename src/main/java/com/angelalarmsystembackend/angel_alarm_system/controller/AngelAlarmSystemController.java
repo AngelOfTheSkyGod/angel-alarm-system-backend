@@ -3,9 +3,7 @@ package com.angelalarmsystembackend.angel_alarm_system.controller;
 /*
 receive requests and validate user so send the requests to the machine server
  */
-import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
-import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
-import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
+import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,4 +23,10 @@ public class AngelAlarmSystemController {
          System.out.println("RECEIVED CONNECTION! FROM: " + data.getIpAddress() + " username: " + data.getDeviceName() + " password: " + data.getPassword());
          DeviceService.connectDevice(data);
      }
+
+    @PostMapping("/addImage")
+    public void addImage(@RequestBody AddImageRequest data) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
+        System.out.println("RECEIVED CONNECTION! FROM: " + data.getUserIdentifier());
+        DeviceService.addImage(data);
+    }
 }
