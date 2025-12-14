@@ -64,10 +64,11 @@ public class DeviceClient {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
-
-        return objectMapper.readValue(
+        ImageRequestResponse requestResponse = objectMapper.readValue(
                 response.body(),
                 ImageRequestResponse.class
         );
+        System.out.println("success: " + requestResponse.isSuccess());
+        return requestResponse;
     }
 }
