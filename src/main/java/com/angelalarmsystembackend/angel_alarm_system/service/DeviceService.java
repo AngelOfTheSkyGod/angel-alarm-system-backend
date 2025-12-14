@@ -48,4 +48,12 @@ public class DeviceService {
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
         return DeviceClient.addImage(deviceClient.getIpAddress(), addImageRequest.getImageDataUrl());
     }
+
+    public static ImageRequestResponse deleteImage(DeleteImageRequest deleteImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+        if (!AccountUtils.isAuthenticated(deleteImageRequest.getUserIdentifier(), deleteImageRequest.getUsername(), deleteImageRequest.getPassword())){
+            return null;
+        }
+        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(deleteImageRequest.getUsername());
+        return DeviceClient.deleteImage(deviceClient.getIpAddress(), deleteImageRequest.getImagePosition());
+    }
 }

@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AddImageRequest extends LoginDetails{
-    private String imageDataUrl;
+@Builder
+public class DeleteImageRequest extends LoginDetails {
+    Integer imagePosition;
 }

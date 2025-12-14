@@ -7,6 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AddImageRequest extends LoginDetails{
-    private String imageDataUrl;
+public class LoginDetails {
+    private String username;
+    private String password;
+    private String userIdentifier;
 }

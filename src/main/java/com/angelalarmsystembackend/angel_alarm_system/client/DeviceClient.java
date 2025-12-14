@@ -1,9 +1,6 @@
 package com.angelalarmsystembackend.angel_alarm_system.client;
 
-import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
-import com.angelalarmsystembackend.angel_alarm_system.model.ImageRequestResponse;
-import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowData;
-import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowPictureData;
+import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
@@ -68,7 +65,25 @@ public class DeviceClient {
                 response.body(),
                 ImageRequestResponse.class
         );
-        System.out.println("success: " + requestResponse.isSuccess());
+        System.out.println("add image success: " + requestResponse.isSuccess());
+        return requestResponse;
+    }
+
+    public static ImageRequestResponse deleteImage(String pathName, Integer imagePosition) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(DeleteImageRequest.builder().imagePosition(imagePosition).build());
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create("http://" + pathName + "/deleteImage"))
+                .header("Content-Type", "application/json")
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        ImageRequestResponse requestResponse = objectMapper.readValue(
+                response.body(),
+                ImageRequestResponse.class
+        );
+        System.out.println("delete image success: " + requestResponse.isSuccess());
         return requestResponse;
     }
 }

@@ -9,10 +9,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AASData {
-    private String username;
-    private String password;
-    private String userIdentifier;
+public class AASData extends LoginDetails{
     private List<AlarmDataRowData> alarmData;
     private List<CalendarDataRowData> calendarData;
     private List<SlideShowPictureData> slideShowData;

@@ -29,4 +29,10 @@ public class AngelAlarmSystemController {
         System.out.println("RECEIVED CONNECTION! FROM: " + data.getUserIdentifier());
         return DeviceService.addImage(data);
     }
+
+    @PostMapping("/deleteImage")
+    public ImageRequestResponse deleteImage(@RequestBody AddImageRequest data) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
+        System.out.println("RECEIVED CONNECTION! FROM: " + data.getUserIdentifier());
+        return DeviceService.addImage(data);
+    }
 }
