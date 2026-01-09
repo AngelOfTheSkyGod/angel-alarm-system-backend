@@ -13,8 +13,13 @@ import java.security.spec.InvalidKeySpecException;
 
 @RestController
 public class AngelAlarmSystemController {
+    @PostMapping("/connectSlideShow")
+    public SlideShowData connectSlideShow(@RequestBody AASData aasData) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
+        return DeviceService.connectSlideShow(aasData);
+    }
+
     @PostMapping("/connect")
-    public SlideShowData connect(@RequestBody AASData aasData) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
+    public AASData connect(@RequestBody AASData aasData) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
         return DeviceService.connectToDevice(aasData);
     }
 

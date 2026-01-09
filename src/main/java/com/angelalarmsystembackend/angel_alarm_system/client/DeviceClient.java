@@ -29,7 +29,29 @@ public class DeviceClient {
 
     }
 
-    public static SlideShowData sendConnect(String pathName) throws IOException, InterruptedException {
+    public static SlideShowData sendSlideShowConnect(String pathName) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://" + pathName + "/connectSlideShow"))
+                .header("Content-Type", "application/json")
+                .build();
+        HttpResponse<InputStream> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofInputStream());
+        try (InputStream is = response.body()) {
+            // Read in chunks
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[4096];
+            int n;
+            while ((n = is.read(chunk)) != -1) {
+                buffer.write(chunk, 0, n);
+            }
+
+            String json = buffer.toString(StandardCharsets.UTF_8);
+            return new ObjectMapper().readValue(json, SlideShowData.class);
+        }
+    }
+
+    public static AASData sendConnect(String pathName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create("http://" + pathName + "/connect"))
@@ -47,7 +69,7 @@ public class DeviceClient {
             }
 
             String json = buffer.toString(StandardCharsets.UTF_8);
-            return new ObjectMapper().readValue(json, SlideShowData.class);
+            return new ObjectMapper().readValue(json, AASData.class);
         }
     }
 
