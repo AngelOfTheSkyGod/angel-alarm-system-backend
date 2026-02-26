@@ -29,9 +29,11 @@ public class DeviceClient {
 
     }
 
-    public static SlideShowData sendSlideShowConnect(String pathName) throws IOException, InterruptedException {
+    public static SlideShowData sendSlideShowConnect(String pathName, SlideShowRequest slideShowRequest) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(slideShowRequest);
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .uri(URI.create("http://" + pathName + "/connectSlideShow"))
                 .header("Content-Type", "application/json")
                 .build();

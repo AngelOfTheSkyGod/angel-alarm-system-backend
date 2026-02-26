@@ -31,14 +31,14 @@ public class DeviceService {
                 .build());
     }
 
-    public static SlideShowData connectSlideShow(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        if (!AccountUtils.isAuthenticated(aasData.getUserIdentifier(), aasData.getUsername(), aasData.getPassword())){
+    public static SlideShowData connectSlideShow(SlideShowRequest slideShowRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+        if (!AccountUtils.isAuthenticated(slideShowRequest.getUserIdentifier(), slideShowRequest.getUsername(), slideShowRequest.getPassword())){
             return null;
         }
-        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
+        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(slideShowRequest.getUsername());
         System.out.println("device client: " + deviceClient.getIpAddress() + " name : " + deviceClient.getDeviceName());
-        clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
-        return DeviceClient.sendSlideShowConnect(deviceClient.getIpAddress());
+        clientToMachineMap.put(slideShowRequest.getUserIdentifier(), deviceClient);
+        return DeviceClient.sendSlideShowConnect(deviceClient.getIpAddress(), slideShowRequest);
     }
 
     public static AASData connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {

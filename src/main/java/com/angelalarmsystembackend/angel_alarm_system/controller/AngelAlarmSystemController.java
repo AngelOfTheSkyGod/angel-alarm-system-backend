@@ -14,8 +14,8 @@ import java.security.spec.InvalidKeySpecException;
 @RestController
 public class AngelAlarmSystemController {
     @PostMapping("/connectSlideShow")
-    public SlideShowData connectSlideShow(@RequestBody AASData aasData) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
-        return DeviceService.connectSlideShow(aasData);
+    public SlideShowData connectSlideShow(@RequestBody SlideShowRequest slideShowRequest) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
+        return DeviceService.connectSlideShow(slideShowRequest);
     }
 
     @PostMapping("/connect")
