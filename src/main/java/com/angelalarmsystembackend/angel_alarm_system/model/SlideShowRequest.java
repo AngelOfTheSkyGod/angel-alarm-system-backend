@@ -8,4 +8,5 @@ import lombok.*;
 @ToString
 public class SlideShowRequest extends LoginDetails{
     int pageNumber;
+    int startNumber;
 }
