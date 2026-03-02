@@ -9,4 +9,5 @@ import lombok.*;
 @ToString
 public class AddImageRequest extends LoginDetails{
     private String imageDataUrl;
+    private String fileName;
 }

@@ -6,6 +6,9 @@ import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
 import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
@@ -56,7 +59,13 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
             return null;
         }
+        byte[] imageBytes = Base64.getDecoder().decode(addImageRequest.getImageDataUrl());
 
+        Path deviceDir = Paths.get("/data/images/", clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
+        Files.createDirectories(deviceDir);
+
+        Path filePath = deviceDir.resolve(addImageRequest.getFileName());
+        Files.write(filePath, imageBytes);
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
         return DeviceClient.addImage(deviceClient.getIpAddress(), addImageRequest.getImageDataUrl());
     }
