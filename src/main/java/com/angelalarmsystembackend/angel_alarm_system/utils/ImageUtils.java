@@ -91,8 +91,6 @@ public class ImageUtils {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
             return files
                     .filter(Files::isRegularFile)
-                    .skip(startIndex)
-                    .limit(20)
                     .sorted(Comparator.comparingLong(path -> {
                         try {
                             return Files.getLastModifiedTime((Path) path).toMillis();
@@ -100,6 +98,8 @@ public class ImageUtils {
                             return 0L;
                         }
                     }))
+                    .skip(startIndex)
+                    .limit(20)
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
