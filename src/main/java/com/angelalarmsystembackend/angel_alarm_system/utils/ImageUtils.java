@@ -88,11 +88,11 @@ public class ImageUtils {
         }
     }
 
-    public static List<String> getFilePaths(String folderPath) {
+    public static List<String> getFileNames(String folderPath) {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
             return files
                     .filter(Files::isRegularFile)
-                    .map(Path::toAbsolutePath)   // optional but recommended
+                    .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
         } catch (IOException e) {

@@ -42,7 +42,7 @@ public class DeviceService {
 //        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(slideShowRequest.getUsername());
 //        System.out.println("device client: " + deviceClient.getIpAddress() + " name : " + deviceClient.getDeviceName());
 //        clientToMachineMap.put(slideShowRequest.getUserIdentifier(), deviceClient);
-        List<String> imageList = ImageUtils.getFilePaths("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
+        List<String> imageList = ImageUtils.getFileNames("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
 
         return SlideShowData.builder().imageList(
