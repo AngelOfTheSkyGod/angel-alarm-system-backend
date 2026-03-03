@@ -39,12 +39,15 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(slideShowRequest.getUserIdentifier(), slideShowRequest.getUsername(), slideShowRequest.getPassword())){
             return null;
         }
-//        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(slideShowRequest.getUsername());
-//        System.out.println("device client: " + deviceClient.getIpAddress() + " name : " + deviceClient.getDeviceName());
-//        clientToMachineMap.put(slideShowRequest.getUserIdentifier(), deviceClient);
-        List<String> imageList = ImageUtils.getFileNames("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
+        String imagePath = "/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName();
+        Path path = Paths.get(imagePath);
 
-        Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+            return SlideShowData.builder().imageList(List.of()).imageCount(0).build();
+        }
+        List<String> imageList = ImageUtils.getFileNames(imagePath);
+        Integer numberOfImages = ImageUtils.countFiles(imagePath);
 
         String baseUrl = "http://quinonesangel.com:1312/images/" + slideShowRequest.getUsername() + "/";
 
