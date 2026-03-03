@@ -3,6 +3,7 @@ package com.angelalarmsystembackend.angel_alarm_system.service;
 import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
+import com.angelalarmsystembackend.angel_alarm_system.utils.ImageUtils;
 import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
 
 import java.io.IOException;
@@ -66,8 +67,10 @@ public class DeviceService {
 
         Path filePath = deviceDir.resolve(addImageRequest.getFileName());
         Files.write(filePath, imageBytes);
-        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
-        return DeviceClient.addImage(deviceClient.getIpAddress(), addImageRequest.getImageDataUrl());
+//        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
+        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
+        Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
+        return ImageRequestResponse.builder().imageCount(numberOfImages).success(success).build();
     }
 
     public static ImageRequestResponse deleteImage(DeleteImageRequest deleteImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
