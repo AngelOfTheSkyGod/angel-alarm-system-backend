@@ -12,38 +12,36 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 public class ImageUtils {
 
-    private static BufferedImage resizeKeepingAspectRatio(
-            BufferedImage originalImage,
-            int targetWidth,
-            int targetHeight) {
-
+    public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         int originalWidth = originalImage.getWidth();
         int originalHeight = originalImage.getHeight();
 
-        double widthRatio = (double) targetWidth / originalWidth;
-        double heightRatio = (double) targetHeight / originalHeight;
+        // Calculate the best new dimensions to fit within the target while maintaining aspect ratio
+        float aspectRatio = (float) originalWidth / originalHeight;
+        int newWidth = targetWidth;
+        int newHeight = (int) (newWidth / aspectRatio);
 
-        double scale = Math.min(widthRatio, heightRatio);
+        if (newHeight > targetHeight) {
+            // If the calculated height exceeds the target height, recalculate based on the target height
+            newHeight = targetHeight;
+            newWidth = (int) (newHeight * aspectRatio);
+        }
 
-        int newWidth = (int) (originalWidth * scale);
-        int newHeight = (int) (originalHeight * scale);
+        // Create a new BufferedImage with the calculated dimensions and type
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
 
-        BufferedImage resized =
-                new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        // Get Graphics2D object to draw the scaled image
+        Graphics2D graphics = resizedImage.createGraphics();
 
-        Graphics2D g2d = resized.createGraphics();
+        // Set rendering hints for high quality
+        graphics.setRenderingHints(
+                new RenderingHints(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC));
 
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        // Draw the original image onto the new image, scaling it to the new dimensions
+        graphics.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+        graphics.dispose();
 
-        g2d.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
-        g2d.dispose();
-
-        return resized;
+        return resizedImage;
     }
 
     public static boolean makeImage(String base64, String filePath) throws IOException {
@@ -61,7 +59,7 @@ public class ImageUtils {
         int targetHeight = 320;
 
         BufferedImage resizedImage =
-                resizeKeepingAspectRatio(originalImage, targetWidth, targetHeight);
+                resizeImage(originalImage, targetWidth, targetHeight);
 
         // ✅ Always ensure .png extension
         if (!filePath.toLowerCase().endsWith(".png")) {
