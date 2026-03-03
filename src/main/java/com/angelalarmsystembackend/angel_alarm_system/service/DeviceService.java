@@ -76,14 +76,6 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
             return null;
         }
-        byte[] imageBytes = Base64.getDecoder().decode(addImageRequest.getImageDataUrl());
-
-        Path deviceDir = Paths.get("/data/images/", clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
-        Files.createDirectories(deviceDir);
-
-        Path filePath = deviceDir.resolve(addImageRequest.getFileName());
-        Files.write(filePath, imageBytes);
-//        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername());
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         return ImageRequestResponse.builder().imageCount(numberOfImages).success(success).build();
