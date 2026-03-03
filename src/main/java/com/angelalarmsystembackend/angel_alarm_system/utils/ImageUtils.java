@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 public class ImageUtils {
@@ -77,6 +78,18 @@ public class ImageUtils {
             return Math.toIntExact(files
                     .filter(Files::isRegularFile)
                     .count());
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading directory", e);
+        }
+    }
+
+    public static List<String> getFilePaths(String folderPath) {
+        try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
+            return files
+                    .filter(Files::isRegularFile)
+                    .map(Path::toAbsolutePath)   // optional but recommended
+                    .map(Path::toString)
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException("Error reading directory", e);
         }
