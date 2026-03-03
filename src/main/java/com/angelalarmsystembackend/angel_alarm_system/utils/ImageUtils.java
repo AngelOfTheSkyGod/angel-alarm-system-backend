@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
@@ -90,6 +91,13 @@ public class ImageUtils {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
             return files
                     .filter(Files::isRegularFile)
+                    .sorted(Comparator.comparingLong(path -> {
+                        try {
+                            return Files.getLastModifiedTime((Path) path).toMillis();
+                        } catch (IOException e) {
+                            return 0L;
+                        }
+                    }))
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
