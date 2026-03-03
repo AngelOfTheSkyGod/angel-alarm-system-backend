@@ -87,10 +87,12 @@ public class ImageUtils {
         }
     }
 
-    public static List<String> getFileNames(String folderPath) {
+    public static List<String> getFileNames(String folderPath, Integer startIndex) {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
             return files
                     .filter(Files::isRegularFile)
+                    .skip(startIndex)
+                    .limit(20)
                     .sorted(Comparator.comparingLong(path -> {
                         try {
                             return Files.getLastModifiedTime((Path) path).toMillis();

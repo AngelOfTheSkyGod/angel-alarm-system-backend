@@ -46,7 +46,7 @@ public class DeviceService {
             Files.createDirectories(path);
             return SlideShowData.builder().imageList(List.of()).imageCount(0).build();
         }
-        List<String> imageList = ImageUtils.getFileNames(imagePath);
+        List<String> imageList = ImageUtils.getFileNames(imagePath, slideShowRequest.getStartNumber());
         Integer numberOfImages = ImageUtils.countFiles(imagePath);
 
         String baseUrl = "http://quinonesangel.com:1312/images/" + slideShowRequest.getUsername() + "/";
