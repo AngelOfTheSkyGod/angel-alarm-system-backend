@@ -2,8 +2,6 @@ package com.angelalarmsystembackend.angel_alarm_system.model;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,4 +10,5 @@ import java.util.List;
 @Builder
 public class SlideShowPictureData {
     private String imageDataUrl;
+    private String fileName;
 }

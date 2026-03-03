@@ -11,5 +11,5 @@ import java.util.*;
 @ToString
 public class SlideShowData {
     private Integer imageCount;
-    private List<String> imageList;
+    private List<SlideShowPictureData> imageList;
 }

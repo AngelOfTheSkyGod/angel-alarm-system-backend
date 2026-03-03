@@ -43,11 +43,19 @@ public class DeviceService {
 //        System.out.println("device client: " + deviceClient.getIpAddress() + " name : " + deviceClient.getDeviceName());
 //        clientToMachineMap.put(slideShowRequest.getUserIdentifier(), deviceClient);
         List<String> imageList = ImageUtils.getFileNames("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
+
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(slideShowRequest.getUserIdentifier()).getDeviceName());
 
-        return SlideShowData.builder().imageList(
-                imageList
-        ).imageCount(numberOfImages).build();
+        String baseUrl = "http://quinonesangel.com:1312/images/" + slideShowRequest.getUsername() + "/";
+
+        List<SlideShowPictureData> pictures = imageList.stream()
+                .map(fileName -> SlideShowPictureData.builder()
+                        .fileName(fileName)
+                        .imageDataUrl(baseUrl + fileName)
+                        .build())
+                .toList();
+
+        return SlideShowData.builder().imageList(pictures).imageCount(numberOfImages).build();
     }
 
     public static AASData connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
