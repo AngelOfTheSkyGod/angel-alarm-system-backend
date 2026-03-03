@@ -47,7 +47,7 @@ public class ImageUtils {
     }
 
     public static boolean makeImage(String base64, String filePath) throws IOException {
-        // Remove data URI prefix if present
+
         if (base64.contains(",")) {
             base64 = base64.split(",")[1];
         }
@@ -62,16 +62,21 @@ public class ImageUtils {
 
         BufferedImage resizedImage =
                 resizeKeepingAspectRatio(originalImage, targetWidth, targetHeight);
-        try{
-            if (!ImageIO.write(resizedImage, "png", new File(filePath))){
-               throw new IOException("Unsupported image format or corrupted image.");
-            }
-            return true;
-        }catch(IOException e){
-            return false;
-        }
-    }
 
+        // ✅ Always ensure .png extension
+        if (!filePath.toLowerCase().endsWith(".png")) {
+            filePath = filePath + ".png";
+        }
+
+        File outputFile = new File(filePath);
+        outputFile.getParentFile().mkdirs(); // ensure folder exists
+
+        if (!ImageIO.write(resizedImage, "png", outputFile)) {
+            throw new IOException("Unsupported image format or corrupted image.");
+        }
+
+        return true;
+    }
 
     public static Integer countFiles(String folderPath) {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
