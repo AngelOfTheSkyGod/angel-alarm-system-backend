@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
+
+import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
+
 public class ImageUtils {
 
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -87,7 +90,7 @@ public class ImageUtils {
         }
     }
 
-    public static List<String> getFileNames(String folderPath, Integer startIndex) {
+    public static List<String> getFileNames(String folderPath, Integer page) {
         try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
             return files
                     .filter(Files::isRegularFile)
@@ -98,8 +101,8 @@ public class ImageUtils {
                             return 0L;
                         }
                     }))
-                    .skip(startIndex)
-                    .limit(20)
+                    .skip((long) page * PAGE_SIZE)
+                    .limit(PAGE_SIZE)
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
