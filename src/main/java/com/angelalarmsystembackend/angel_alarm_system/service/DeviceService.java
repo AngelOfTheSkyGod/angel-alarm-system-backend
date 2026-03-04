@@ -14,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
+import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
+
 public class DeviceService {
     public static final Set<DeviceData> devices = new HashSet<>();
     public static final Map<String, DeviceClientData> deviceNameToDeviceClientData = new HashMap<>();
@@ -78,7 +80,8 @@ public class DeviceService {
         }
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
-        return ImageRequestResponse.builder().imageCount(numberOfImages).success(success).build();
+        Integer numberOfPages = numberOfImages / PAGE_SIZE;
+        return ImageRequestResponse.builder().imageCount(numberOfImages).pageNumber(numberOfPages).success(success).build();
     }
 
     public static ImageRequestResponse deleteImage(DeleteImageRequest deleteImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
