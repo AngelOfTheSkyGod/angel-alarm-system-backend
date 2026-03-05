@@ -86,6 +86,7 @@ public class DeviceService {
         if (exists){
             fileName = fileName + UUID.randomUUID();
         }
+        System.out.println("file name: " + fileName + " adding ");
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages) / PAGE_SIZE;
