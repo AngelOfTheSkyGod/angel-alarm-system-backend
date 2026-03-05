@@ -102,7 +102,7 @@ public class ImageUtils {
                         }
                     }))
                     .skip((long) page * PAGE_SIZE)
-                    .limit(PAGE_SIZE - 1)
+                    .limit(PAGE_SIZE)
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .toList();
