@@ -83,7 +83,7 @@ public class DeviceService {
             return null;
         }
         String fileName = addImageRequest.getFileName();
-        Path filePath = Path.of("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
+        Path filePath = Path.of("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName + ".png");
         boolean exists = Files.exists(filePath);
         if (exists){
             fileName = fileName + UUID.randomUUID();
