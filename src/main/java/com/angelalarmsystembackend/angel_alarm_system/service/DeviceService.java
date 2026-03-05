@@ -50,7 +50,7 @@ public class DeviceService {
         }
         List<String> imageList = ImageUtils.getFileNames(imagePath, slideShowRequest.getPageNumber());
         Integer numberOfImages = ImageUtils.countFiles(imagePath);
-        Integer numberOfPages = (numberOfImages - 1) / PAGE_SIZE;
+        Integer numberOfPages = (numberOfImages) / PAGE_SIZE;
 
         String baseUrl = "http://quinonesangel.com:1312/images/" + slideShowRequest.getUsername() + "/";
 
@@ -80,7 +80,7 @@ public class DeviceService {
         }
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
-        Integer numberOfPages = (numberOfImages - 1) / PAGE_SIZE;
+        Integer numberOfPages = (numberOfImages) / PAGE_SIZE;
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 
