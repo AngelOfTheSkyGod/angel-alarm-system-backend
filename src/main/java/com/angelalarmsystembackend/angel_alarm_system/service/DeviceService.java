@@ -98,7 +98,7 @@ public class DeviceService {
         System.out.println("file name: " + fileName + " adding ");
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
-        Integer numberOfPages = (numberOfImages) / PAGE_SIZE;
+        Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 
