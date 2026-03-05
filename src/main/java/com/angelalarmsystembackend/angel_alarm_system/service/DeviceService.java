@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
+import java.util.UUID;
 
 import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
 
@@ -78,7 +79,13 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
             return null;
         }
-        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
+        String fileName = addImageRequest.getFileName();
+        Path filePath = Path.of("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
+        boolean exists = Files.exists(filePath);
+        if (exists){
+            fileName = fileName + UUID.randomUUID();
+        }
+        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages) / PAGE_SIZE;
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
