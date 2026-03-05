@@ -71,6 +71,7 @@ public class DeviceService {
         }
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
         clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
+        System.out.println("connecting to: " + aasData.getUsername() + " from: " + aasData.getUserIdentifier());
         return DeviceClient.sendConnect(deviceClient.getIpAddress());
     }
 
