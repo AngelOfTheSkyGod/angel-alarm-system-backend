@@ -11,5 +11,5 @@ import lombok.*;
 public class ImageRequestResponse {
     Integer imageCount;
     boolean success;
-    Integer pageNumber;
+    Integer numberOfPages;
 }

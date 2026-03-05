@@ -50,6 +50,7 @@ public class DeviceService {
         }
         List<String> imageList = ImageUtils.getFileNames(imagePath, slideShowRequest.getPageNumber());
         Integer numberOfImages = ImageUtils.countFiles(imagePath);
+        Integer numberOfPages = numberOfImages / PAGE_SIZE;
 
         String baseUrl = "http://quinonesangel.com:1312/images/" + slideShowRequest.getUsername() + "/";
 
@@ -60,7 +61,7 @@ public class DeviceService {
                         .build())
                 .toList();
 
-        return SlideShowData.builder().imageList(pictures).imageCount(numberOfImages).build();
+        return SlideShowData.builder().imageList(pictures).numberOfPages(numberOfPages).imageCount(numberOfImages).build();
     }
 
     public static AASData connectToDevice(AASData aasData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
@@ -81,7 +82,7 @@ public class DeviceService {
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + addImageRequest.getFileName());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = numberOfImages / PAGE_SIZE;
-        return ImageRequestResponse.builder().imageCount(numberOfImages).pageNumber(numberOfPages).success(success).build();
+        return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 
     public static ImageRequestResponse deleteImage(DeleteImageRequest deleteImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
