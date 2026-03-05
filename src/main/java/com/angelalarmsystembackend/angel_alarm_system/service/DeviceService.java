@@ -91,7 +91,7 @@ public class DeviceService {
         String imagePath = "/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName();
         boolean success = ImageUtils.deleteFilesByIndexes(imagePath, deleteImageRequest.getPageNumber(), deleteImageRequest.getImagesDeleted());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName());
-        Integer numberOfPages = Math.abs(numberOfImages - 1) / PAGE_SIZE;
+        Integer numberOfPages = Math.abs(numberOfImages) / PAGE_SIZE;
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 }
