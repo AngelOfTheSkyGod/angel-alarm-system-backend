@@ -39,8 +39,6 @@ public class DeviceService {
     }
 
     public static SlideShowData connectSlideShow(SlideShowRequest slideShowRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        System.out.println("request");
-        System.out.println(slideShowRequest);
         System.out.println("username: " + slideShowRequest.getUsername());
         System.out.println("uid: " + slideShowRequest.getUserIdentifier());
         if (!AccountUtils.isAuthenticated(slideShowRequest.getUserIdentifier(), slideShowRequest.getUsername(), slideShowRequest.getPassword())){
@@ -81,8 +79,6 @@ public class DeviceService {
 
 
     public static ImageRequestResponse addImage(AddImageRequest addImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        System.out.println("add image request");
-        System.out.println(addImageRequest);
         System.out.println("username: " + addImageRequest.getUsername());
         System.out.println("uid: " + addImageRequest.getUserIdentifier());
         System.out.println("image name: " + addImageRequest.getFileName());
