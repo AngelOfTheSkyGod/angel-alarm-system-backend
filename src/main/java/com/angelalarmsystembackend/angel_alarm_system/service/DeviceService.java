@@ -39,6 +39,8 @@ public class DeviceService {
     }
 
     public static SlideShowData connectSlideShow(SlideShowRequest slideShowRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+        System.out.println("request");
+        System.out.println(slideShowRequest);
         if (!AccountUtils.isAuthenticated(slideShowRequest.getUserIdentifier(), slideShowRequest.getUsername(), slideShowRequest.getPassword())){
             return null;
         }
