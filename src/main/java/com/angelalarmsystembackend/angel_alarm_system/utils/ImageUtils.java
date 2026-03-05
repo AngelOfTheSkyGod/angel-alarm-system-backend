@@ -19,7 +19,6 @@ public class ImageUtils {
         if (base64.contains(",")) {
             base64 = base64.split(",")[1];
         }
-
         byte[] imageBytes = Base64.getDecoder().decode(base64);
 
         BufferedImage originalImage =
@@ -36,6 +35,7 @@ public class ImageUtils {
         if (!ImageIO.write(originalImage, "png", outputFile)) {
             throw new IOException("Unsupported image format or corrupted image.");
         }
+        System.out.println("created! file path: " + filePath);
 
         return true;
     }
