@@ -74,7 +74,7 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(aasData.getUserIdentifier(), aasData.getUsername(), aasData.getPassword())){
             return null;
         }
-        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
+        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername().toLowerCase());
         clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
         return DeviceClient.sendConnect(deviceClient.getIpAddress());
     }
