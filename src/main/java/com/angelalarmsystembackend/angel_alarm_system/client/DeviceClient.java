@@ -29,30 +29,6 @@ public class DeviceClient {
 
     }
 
-    public static SlideShowData sendSlideShowConnect(String pathName, SlideShowRequest slideShowRequest) throws IOException, InterruptedException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(slideShowRequest);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create("http://" + pathName + "/connectSlideShow"))
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<InputStream> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofInputStream());
-        try (InputStream is = response.body()) {
-            // Read in chunks
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] chunk = new byte[4096];
-            int n;
-            while ((n = is.read(chunk)) != -1) {
-                buffer.write(chunk, 0, n);
-            }
-
-            String json = buffer.toString(StandardCharsets.UTF_8);
-            return new ObjectMapper().readValue(json, SlideShowData.class);
-        }
-    }
-
     public static AASData sendConnect(String pathName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -73,41 +49,5 @@ public class DeviceClient {
             String json = buffer.toString(StandardCharsets.UTF_8);
             return new ObjectMapper().readValue(json, AASData.class);
         }
-    }
-
-    public static ImageRequestResponse addImage(String pathName, String imageDataUrl) throws IOException, InterruptedException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(SlideShowPictureData.builder().imageDataUrl(imageDataUrl).build());
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create("http://" + pathName + "/addImage"))
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        ImageRequestResponse requestResponse = objectMapper.readValue(
-                response.body(),
-                ImageRequestResponse.class
-        );
-        System.out.println("add image success: " + requestResponse.isSuccess());
-        return requestResponse;
-    }
-
-    public static ImageRequestResponse deleteImage(String pathName, Integer imagePosition) throws IOException, InterruptedException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(DeleteImageRequest.builder().imagePosition(imagePosition).build());
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create("http://" + pathName + "/deleteImage"))
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        ImageRequestResponse requestResponse = objectMapper.readValue(
-                response.body(),
-                ImageRequestResponse.class
-        );
-        System.out.println("delete image success: " + requestResponse.isSuccess());
-        return requestResponse;
     }
 }

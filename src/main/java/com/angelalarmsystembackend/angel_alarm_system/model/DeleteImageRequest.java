@@ -2,6 +2,8 @@ package com.angelalarmsystembackend.angel_alarm_system.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -9,5 +11,6 @@ import lombok.*;
 @ToString
 @Builder
 public class DeleteImageRequest extends LoginDetails {
-    Integer imagePosition;
+    int[] imagesDeleted;
+    Integer pageNumber;
 }

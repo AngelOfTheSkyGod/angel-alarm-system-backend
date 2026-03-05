@@ -6,9 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
@@ -108,6 +106,46 @@ public class ImageUtils {
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException("Error reading directory", e);
+        }
+    }
+
+    public static boolean deleteFilesByIndexes(String folderPath, Integer page, int[] imagesDeleted) {
+        if (page < 0 || page > countFiles(folderPath) / PAGE_SIZE || imagesDeleted.length > PAGE_SIZE || imagesDeleted.length == 0) {
+            return false;
+        }
+        try (Stream<Path> files = Files.list(Paths.get(folderPath))) {
+
+            List<Path> fileList = files
+                    .filter(Files::isRegularFile)
+                    .sorted(Comparator.comparingLong(path -> {
+                        try {
+                            return Files.getLastModifiedTime(path).toMillis();
+                        } catch (IOException e) {
+                            return 0L;
+                        }
+                    }))
+                    .skip((long) page * PAGE_SIZE)
+                    .limit(PAGE_SIZE)
+                    .toList();
+
+            List<String> deletedFiles = new ArrayList<>();
+
+            Arrays.sort(imagesDeleted);
+            for (int i = imagesDeleted.length - 1; i >= 0; i--) {
+                int index = imagesDeleted[i];
+
+                if (index >= 0 && index < fileList.size()) {
+                    Path fileToDelete = fileList.get(index);
+                    boolean isSuccess = Files.deleteIfExists(fileToDelete);
+                    if (!isSuccess){
+                        return false;
+                    }
+                    deletedFiles.add(fileToDelete.getFileName().toString());
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException("Error deleting files", e);
         }
     }
 }

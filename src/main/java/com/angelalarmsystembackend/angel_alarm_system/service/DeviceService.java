@@ -69,7 +69,6 @@ public class DeviceService {
             return null;
         }
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(aasData.getUsername());
-        System.out.println("device client: " + deviceClient.getIpAddress() + " name : " + deviceClient.getDeviceName());
         clientToMachineMap.put(aasData.getUserIdentifier(), deviceClient);
         return DeviceClient.sendConnect(deviceClient.getIpAddress());
     }
@@ -89,7 +88,10 @@ public class DeviceService {
         if (!AccountUtils.isAuthenticated(deleteImageRequest.getUserIdentifier(), deleteImageRequest.getUsername(), deleteImageRequest.getPassword())){
             return null;
         }
-        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(deleteImageRequest.getUsername());
-        return DeviceClient.deleteImage(deviceClient.getIpAddress(), deleteImageRequest.getImagePosition());
+        String imagePath = "/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName();
+        boolean success = ImageUtils.deleteFilesByIndexes(imagePath, deleteImageRequest.getPageNumber(), deleteImageRequest.getImagesDeleted());
+        Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName());
+        Integer numberOfPages = numberOfImages / PAGE_SIZE;
+        return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 }
