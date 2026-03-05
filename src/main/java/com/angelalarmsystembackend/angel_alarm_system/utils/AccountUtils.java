@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class AccountUtils {
@@ -62,11 +63,11 @@ public class AccountUtils {
     }
 
     public static boolean isAuthenticated(String userIdentifier, String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if (DeviceService.clientToMachineMap.get(userIdentifier) != null && !DeviceService.clientToMachineMap.get(userIdentifier).getDeviceName().equalsIgnoreCase(username)){
+        if (DeviceService.clientToMachineMap.get(userIdentifier) != null && !DeviceService.clientToMachineMap.get(userIdentifier).getDeviceName().toLowerCase(Locale.ROOT).equalsIgnoreCase(username.toLowerCase(Locale.ROOT))){
             System.err.println("user is connected to a device already.");
             return false;
         }
-        DeviceClientData deviceClient = DeviceService.deviceNameToDeviceClientData.get(username);
+        DeviceClientData deviceClient = DeviceService.deviceNameToDeviceClientData.get(username.toLowerCase(Locale.ROOT));
         return (verifyPassword(password, deviceClient.getSalt(), deviceClient.getPasswordHash()));
     }
 
