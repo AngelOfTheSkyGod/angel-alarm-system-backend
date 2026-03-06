@@ -2,10 +2,7 @@ package com.angelalarmsystembackend.angel_alarm_system.service;
 
 import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.*;
-import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
-import com.angelalarmsystembackend.angel_alarm_system.utils.ImageSendQueue;
-import com.angelalarmsystembackend.angel_alarm_system.utils.ImageUtils;
-import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
+import com.angelalarmsystembackend.angel_alarm_system.utils.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -97,7 +94,6 @@ public class DeviceService {
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername().toLowerCase());
-        clientToMachineMap.put(addImageRequest.getUserIdentifier(), deviceClient);
         ImageSendQueue.enqueue(AddImageRequestPi0.builder()
                         .pathName("http://" + deviceClient.getIpAddress() + "/addImage")
                         .imageDataUrl(addImageRequest.getImageDataUrl())
@@ -111,7 +107,7 @@ public class DeviceService {
             return null;
         }
         String imagePath = "/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName();
-        boolean success = ImageUtils.deleteFilesByIndexes(imagePath, deleteImageRequest.getPageNumber(), deleteImageRequest.getImagesDeleted());
+        boolean success = ImageUtils.deleteFilesByIndexes(imagePath, deleteImageRequest.getPageNumber(), deleteImageRequest.getImagesDeleted(), deleteImageRequest.getUsername());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(deleteImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();

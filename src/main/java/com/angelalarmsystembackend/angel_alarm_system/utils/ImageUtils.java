@@ -1,6 +1,8 @@
 package com.angelalarmsystembackend.angel_alarm_system.utils;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import com.angelalarmsystembackend.angel_alarm_system.model.DeleteImageRequestPi0;
+import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
+import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -71,7 +73,7 @@ public class ImageUtils {
         }
     }
 
-    public static boolean deleteFilesByIndexes(String folderPath, Integer page, int[] imagesDeleted) {
+    public static boolean deleteFilesByIndexes(String folderPath, Integer page, int[] imagesDeleted, String username) {
         if (page < 0 || page > countFiles(folderPath) / PAGE_SIZE || imagesDeleted.length > PAGE_SIZE || imagesDeleted.length == 0) {
             return false;
         }
@@ -90,19 +92,21 @@ public class ImageUtils {
                     .limit(PAGE_SIZE)
                     .toList();
 
-            List<String> deletedFiles = new ArrayList<>();
-
             Arrays.sort(imagesDeleted);
             for (int i = imagesDeleted.length - 1; i >= 0; i--) {
                 int index = imagesDeleted[i];
 
                 if (index >= 0 && index < fileList.size()) {
                     Path fileToDelete = fileList.get(index);
+                    DeviceClientData deviceClient = DeviceService.deviceNameToDeviceClientData.get(username.toLowerCase());
                     boolean isSuccess = Files.deleteIfExists(fileToDelete);
                     if (!isSuccess){
                         return false;
                     }
-                    deletedFiles.add(fileToDelete.getFileName().toString());
+                    ImageDeleteQueue.enqueue(DeleteImageRequestPi0.builder()
+                            .pathName("http://" + deviceClient.getIpAddress() + "/deleteImage")
+                            .fileName(String.valueOf(fileToDelete.getFileName()))
+                            .build());
                 }
             }
             return true;
