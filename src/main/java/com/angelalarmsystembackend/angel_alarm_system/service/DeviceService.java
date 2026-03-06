@@ -3,6 +3,7 @@ package com.angelalarmsystembackend.angel_alarm_system.service;
 import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.utils.AccountUtils;
+import com.angelalarmsystembackend.angel_alarm_system.utils.ImageSendQueue;
 import com.angelalarmsystembackend.angel_alarm_system.utils.ImageUtils;
 import com.angelalarmsystembackend.angel_alarm_system.utils.IpAddressUtils;
 
@@ -95,6 +96,13 @@ public class DeviceService {
         boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
+        DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername().toLowerCase());
+        clientToMachineMap.put(addImageRequest.getUserIdentifier(), deviceClient);
+        ImageSendQueue.enqueue(AddImageRequestPi0.builder()
+                        .pathName("http://" + deviceClient.getIpAddress() + "/addImage")
+                        .imageDataUrl(addImageRequest.getImageDataUrl())
+                        .fileName(fileName)
+                .build());
         return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
     }
 
