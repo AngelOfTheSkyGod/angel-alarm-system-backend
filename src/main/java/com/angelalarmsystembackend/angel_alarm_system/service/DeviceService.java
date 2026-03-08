@@ -31,6 +31,8 @@ public class DeviceService {
                 .deviceName(deviceData.getDeviceName())
                 .ipAddress(deviceData.getIpAddress())
                 .password(deviceData.getPassword())
+                .width(deviceData.getWidth())
+                .height(deviceData.getHeight())
                 .salt(saltAndHash[0])
                 .passwordHash(saltAndHash[1])
                 .build());
@@ -90,7 +92,8 @@ public class DeviceService {
             fileName = fileName + UUID.randomUUID();
         }
         System.out.println("file name: " + fileName + " adding ");
-        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName);
+        DeviceClientData deviceClientData = clientToMachineMap.get(addImageRequest.getUserIdentifier());
+        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + deviceClientData.getDeviceName() + "/" + fileName, deviceClientData.getWidth(), deviceClientData.getHeight());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername().toLowerCase());

@@ -12,4 +12,6 @@ import java.util.*;
 public class AASData extends LoginDetails{
     private List<AlarmDataRowData> alarmData;
     private List<CalendarDataRowData> calendarData;
+    Integer width;
+    Integer height;
 }

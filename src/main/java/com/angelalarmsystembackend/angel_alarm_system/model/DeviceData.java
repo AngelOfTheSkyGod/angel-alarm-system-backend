@@ -12,4 +12,6 @@ public class DeviceData {
     private String deviceName;
     private String password;
     private String ipAddress;
+    private Integer width;
+    private Integer height;
 }

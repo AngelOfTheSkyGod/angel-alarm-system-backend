@@ -3,28 +3,64 @@ import com.angelalarmsystembackend.angel_alarm_system.model.DeleteImageRequestPi
 import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
 import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
 
 public class ImageUtils {
+    private static BufferedImage resizeKeepingAspectRatio(
+            BufferedImage originalImage,
+            int targetWidth,
+            int targetHeight) {
 
-    public static boolean makeImage(String base64, String filePath) throws IOException {
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        double widthRatio = (double) targetWidth / originalWidth;
+        double heightRatio = (double) targetHeight / originalHeight;
+
+        double scale = Math.min(widthRatio, heightRatio);
+
+        int newWidth = (int) (originalWidth * scale);
+        int newHeight = (int) (originalHeight * scale);
+
+        BufferedImage resized =
+                new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = resized.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+        g2d.dispose();
+
+        return resized;
+    }
+    public static boolean makeImage(String base64, String filePath, Integer width, Integer height) throws IOException {
 
         if (base64.contains(",")) {
             base64 = base64.split(",")[1];
         }
         byte[] imageBytes = Base64.getDecoder().decode(base64);
-
         BufferedImage originalImage =
                 ImageIO.read(new ByteArrayInputStream(imageBytes));
+
+        BufferedImage resizedImage =
+                resizeKeepingAspectRatio(originalImage, width, height);
 
         // ✅ Always ensure .png extension
         if (!filePath.toLowerCase().endsWith(".png")) {
@@ -34,7 +70,7 @@ public class ImageUtils {
         File outputFile = new File(filePath);
         outputFile.getParentFile().mkdirs(); // ensure folder exists
 
-        if (!ImageIO.write(originalImage, "png", outputFile)) {
+        if (!ImageIO.write(resizedImage, "png", outputFile)) {
             throw new IOException("Unsupported image format or corrupted image.");
         }
         System.out.println("created! file path: " + filePath);

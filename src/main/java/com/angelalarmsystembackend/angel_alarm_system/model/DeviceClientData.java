@@ -14,4 +14,6 @@ public class DeviceClientData {
     private String ipAddress;
     private String passwordHash;
     private String salt;
+    private Integer height;
+    private Integer width;
 }
