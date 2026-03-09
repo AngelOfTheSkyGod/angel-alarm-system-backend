@@ -25,6 +25,8 @@ public class DeviceService {
             System.err.println("is not a local ip address or device is already in the system");
             return;
         }
+        System.out.println("connecting:");
+        System.out.println(deviceData);
         String[] saltAndHash = AccountUtils.storePassword(deviceData.getPassword());
         devices.add(deviceData);
         deviceNameToDeviceClientData.put(deviceData.getDeviceName(), DeviceClientData.builder()
