@@ -32,7 +32,7 @@ public class ImageUtils {
 
         int newWidth = (int) (originalWidth * scale);
         int newHeight = (int) (originalHeight * scale);
-
+        System.out.println("height: " + targetHeight + " width: "+ targetWidth + " new height: " + newHeight + " new width: " + newWidth);
         BufferedImage resized =
                 new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 
