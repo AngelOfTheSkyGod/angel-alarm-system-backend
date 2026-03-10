@@ -69,7 +69,7 @@ public class ImageUtils {
 
         File outputFile = new File(filePath);
         outputFile.getParentFile().mkdirs(); // ensure folder exists
-
+        System.out.println("resized image height: " + resizedImage.getHeight() + " resized image width: " + resizedImage.getWidth());
         if (!ImageIO.write(resizedImage, "png", outputFile)) {
             throw new IOException("Unsupported image format or corrupted image.");
         }
