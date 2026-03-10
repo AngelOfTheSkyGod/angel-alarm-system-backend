@@ -50,7 +50,7 @@ public class ImageUtils {
 
         return resized;
     }
-    public static boolean makeImage(String base64, String filePath, Integer width, Integer height) throws IOException {
+    public static BufferedImage makeImage(String base64, String filePath, Integer width, Integer height) throws IOException {
 
         if (base64.contains(",")) {
             base64 = base64.split(",")[1];
@@ -75,7 +75,7 @@ public class ImageUtils {
         }
         System.out.println("created! file path: " + filePath);
 
-        return true;
+        return resizedImage;
     }
 
     public static Integer countFiles(String folderPath) {
@@ -149,5 +149,12 @@ public class ImageUtils {
         } catch (IOException e) {
             throw new RuntimeException("Error deleting files", e);
         }
+    }
+
+    public static String bufferedImageToBase64(BufferedImage image, String format) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, format, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
 }

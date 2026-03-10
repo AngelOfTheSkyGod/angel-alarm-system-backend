@@ -4,6 +4,8 @@ import com.angelalarmsystembackend.angel_alarm_system.client.DeviceClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.utils.*;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
+import java.util.List;
 import java.util.UUID;
 
 import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
@@ -95,16 +98,17 @@ public class DeviceService {
         }
         System.out.println("file name: " + fileName + " adding ");
         DeviceClientData deviceClientData = clientToMachineMap.get(addImageRequest.getUserIdentifier());
-        boolean success = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + deviceClientData.getDeviceName() + "/" + fileName, deviceClientData.getWidth(), deviceClientData.getHeight());
+        BufferedImage image = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + deviceClientData.getDeviceName() + "/" + fileName, deviceClientData.getWidth(), deviceClientData.getHeight());
         Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername().toLowerCase());
+        String base64Image = ImageUtils.bufferedImageToBase64(image, "png");
         ImageSendQueue.enqueue(AddImageRequestPi0.builder()
                         .pathName("http://" + deviceClient.getIpAddress() + "/addImage")
-                        .imageDataUrl(addImageRequest.getImageDataUrl())
+                        .imageDataUrl(base64Image)
                         .fileName(fileName)
                 .build());
-        return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(success).build();
+        return ImageRequestResponse.builder().imageCount(numberOfImages).numberOfPages(numberOfPages).success(true).build();
     }
 
     public static ImageRequestResponse deleteImage(DeleteImageRequest deleteImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
