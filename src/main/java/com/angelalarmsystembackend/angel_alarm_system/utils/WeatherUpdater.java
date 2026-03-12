@@ -21,7 +21,7 @@ public class WeatherUpdater {
         this.weatherClient = weatherClient;
     }
 
-    @Scheduled(initialDelay = 0, fixedRate = 3600000)
+    @Scheduled(initialDelay = 0, fixedRate = 1800000)
     public void updateWeather() throws IOException, InterruptedException {
         OpenWeatherData openWeatherData = weatherClient.getWeather();
         System.out.println(openWeatherData);
