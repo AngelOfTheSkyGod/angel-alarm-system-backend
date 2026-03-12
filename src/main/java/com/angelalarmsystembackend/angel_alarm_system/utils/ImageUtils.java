@@ -152,9 +152,11 @@ public class ImageUtils {
     }
 
     public static String bufferedImageToBase64(BufferedImage image, String format) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, format, baos);
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.getEncoder().encodeToString(imageBytes);
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(image, format, baos);
+            baos.flush();
+            byte[] imageBytes = baos.toByteArray();
+            return Base64.getEncoder().encodeToString(imageBytes);
+        }
     }
 }
