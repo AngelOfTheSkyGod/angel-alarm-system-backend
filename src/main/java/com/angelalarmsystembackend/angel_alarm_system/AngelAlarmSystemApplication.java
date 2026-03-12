@@ -4,7 +4,9 @@ import com.angelalarmsystembackend.angel_alarm_system.utils.ImageDeleterWorker;
 import com.angelalarmsystembackend.angel_alarm_system.utils.ImageSenderWorker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @SpringBootApplication
 public class AngelAlarmSystemApplication {
 

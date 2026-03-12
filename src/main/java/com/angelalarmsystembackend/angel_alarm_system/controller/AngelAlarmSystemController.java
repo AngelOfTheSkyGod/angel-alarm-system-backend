@@ -5,6 +5,7 @@ receive requests and validate user so send the requests to the machine server
  */
 import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
+import com.angelalarmsystembackend.angel_alarm_system.service.WeatherService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -39,5 +40,11 @@ public class AngelAlarmSystemController {
     public ImageRequestResponse deleteImage(@RequestBody DeleteImageRequest data) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
         System.out.println("RECEIVED CONNECTION! FROM: " + data.getUserIdentifier());
         return DeviceService.deleteImage(data);
+    }
+
+    @PostMapping("/getWeather")
+    public OpenWeatherData getWeather(@RequestBody AASData aasData) {
+
+        return WeatherService.getWeather(aasData);
     }
 }
