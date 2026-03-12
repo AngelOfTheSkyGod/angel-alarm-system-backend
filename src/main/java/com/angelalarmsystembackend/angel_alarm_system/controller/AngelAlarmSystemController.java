@@ -43,8 +43,8 @@ public class AngelAlarmSystemController {
     }
 
     @PostMapping("/getWeather")
-    public OpenWeatherData getWeather(@RequestBody AASData aasData) {
+    public OpenWeatherData getWeather(@RequestBody DeviceData deviceData) {
 
-        return WeatherService.getWeather(aasData);
+        return WeatherService.getWeather(deviceData);
     }
 }

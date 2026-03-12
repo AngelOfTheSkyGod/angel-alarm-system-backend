@@ -2,6 +2,7 @@ package com.angelalarmsystembackend.angel_alarm_system.service;
 
 import com.angelalarmsystembackend.angel_alarm_system.client.WeatherClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
+import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
 import com.angelalarmsystembackend.angel_alarm_system.model.OpenWeatherData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,10 @@ public class WeatherService {
     public void setWeather(OpenWeatherData openWeatherData){
         WeatherService.openWeatherData = openWeatherData;
     }
-    public static OpenWeatherData getWeather(AASData aasData){
+    public static OpenWeatherData getWeather(DeviceData aasData){
         System.out.println("getting weather data");
         System.out.println(aasData);
-        if (DeviceService.deviceNameToDeviceClientData.get(aasData.getUsername()).getPassword().equalsIgnoreCase(aasData.getPassword())){
+        if (DeviceService.deviceNameToDeviceClientData.get(aasData.getDeviceName()).getPassword().equalsIgnoreCase(aasData.getPassword())){
             System.out.println("is valid device, requested data: ");
             System.out.println(openWeatherData);
             return openWeatherData;
