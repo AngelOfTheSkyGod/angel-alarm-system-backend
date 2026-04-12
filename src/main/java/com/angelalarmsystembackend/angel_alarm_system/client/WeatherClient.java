@@ -4,6 +4,7 @@ import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
 import com.angelalarmsystembackend.angel_alarm_system.model.ImageRequestResponse;
 import com.angelalarmsystembackend.angel_alarm_system.model.OpenWeatherData;
 import com.angelalarmsystembackend.angel_alarm_system.model.SlideShowPictureData;
+import com.angelalarmsystembackend.angel_alarm_system.model.WeatherGov.WeatherGovData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,7 @@ public class WeatherClient {
         this.env = env;
     }
 
-    public OpenWeatherData getWeather() throws IOException, InterruptedException {
-        System.out.println("weather key: " + env.getProperty("weather.key"));
+    public OpenWeatherData getOpenWeatherMapWeather() throws IOException, InterruptedException {
         String url = "https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&appid=" + env.getProperty("weather.key");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,6 +42,42 @@ public class WeatherClient {
         return objectMapper.readValue(
                 response.body(),
                 OpenWeatherData.class
+        );
+    }
+
+    public WeatherGovData getWeather() throws IOException, InterruptedException {
+        String url = "https://api.weather.gov/gridpoints/LOT/76,74/forecast/hourly";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .header("User-Agent", "quinonesangel2000@gmail.com")
+                .header("Content-Type", "application/json")
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        return objectMapper.readValue(
+                response.body(),
+                WeatherGovData.class
+        );
+    }
+
+    public WeatherGovData getGridPoints() throws IOException, InterruptedException {
+        String url = "https://api.weather.gov/gridpoints/LOT/76,74";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .header("User-Agent", "quinonesangel2000@gmail.com")
+                .header("Content-Type", "application/json")
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        return objectMapper.readValue(
+                response.body(),
+                WeatherGovData.class
         );
     }
 }

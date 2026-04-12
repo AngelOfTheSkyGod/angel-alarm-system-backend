@@ -4,8 +4,15 @@ import com.angelalarmsystembackend.angel_alarm_system.client.WeatherClient;
 import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
 import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
 import com.angelalarmsystembackend.angel_alarm_system.model.OpenWeatherData;
+import com.angelalarmsystembackend.angel_alarm_system.model.TemperatureData;
+import com.angelalarmsystembackend.angel_alarm_system.model.WeatherGov.WeatherGovData;
+import com.angelalarmsystembackend.angel_alarm_system.utils.WeatherUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.List;
+
 @Service
 public class WeatherService {
 
@@ -20,8 +27,20 @@ public class WeatherService {
         this.weatherClient = weatherClient;
     }
 
-    public void setWeather(OpenWeatherData openWeatherData){
-        WeatherService.openWeatherData = openWeatherData;
+    public void setWeather(OpenWeatherData openWeatherData) throws IOException, InterruptedException {
+        WeatherGovData weatherGovData = weatherClient.getWeather();
+        WeatherGovData apparentTemperatures = weatherClient.getGridPoints();
+        List<Integer> lowAndHighTemperature = WeatherUtils.getLowAndMaxTemperature(weatherGovData.getProperties().getPeriods());
+        Integer feelsLike = WeatherUtils.getFeelsLikeTemperature()
+        WeatherService.openWeatherData = OpenWeatherData.builder()
+                .main(
+                        TemperatureData.builder()
+                                .feels_like(Wea)
+                                .temp(Integer.parseInt(weatherGovData.getProperties().getPeriods().getFirst().getTemperature()))
+                                .temp_min(lowAndHighTemperature.get(0))
+                                .temp_max(lowAndHighTemperature.get(1)).build()
+                )
+                .build();
     }
     public static OpenWeatherData getWeather(DeviceData aasData){
         System.out.println("getting weather data");
