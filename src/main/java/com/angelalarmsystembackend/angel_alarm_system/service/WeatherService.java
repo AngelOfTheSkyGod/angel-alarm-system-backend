@@ -1,10 +1,7 @@
 package com.angelalarmsystembackend.angel_alarm_system.service;
 
 import com.angelalarmsystembackend.angel_alarm_system.client.WeatherClient;
-import com.angelalarmsystembackend.angel_alarm_system.model.AASData;
-import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
-import com.angelalarmsystembackend.angel_alarm_system.model.OpenWeatherData;
-import com.angelalarmsystembackend.angel_alarm_system.model.TemperatureData;
+import com.angelalarmsystembackend.angel_alarm_system.model.*;
 import com.angelalarmsystembackend.angel_alarm_system.model.WeatherGov.WeatherGovData;
 import com.angelalarmsystembackend.angel_alarm_system.utils.WeatherUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +28,22 @@ public class WeatherService {
         WeatherGovData weatherGovData = weatherClient.getWeather();
         WeatherGovData apparentTemperatures = weatherClient.getGridPoints();
         List<Integer> lowAndHighTemperature = WeatherUtils.getLowAndMaxTemperature(weatherGovData.getProperties().getPeriods());
-        Integer feelsLike = WeatherUtils.getFeelsLikeTemperature()
+        Integer feelsLike = WeatherUtils.getFeelsLikeTemperature(apparentTemperatures.getProperties().getApparentTemperature().getValues());
         WeatherService.openWeatherData = OpenWeatherData.builder()
                 .main(
                         TemperatureData.builder()
-                                .feels_like(Wea)
-                                .temp(Integer.parseInt(weatherGovData.getProperties().getPeriods().getFirst().getTemperature()))
+                                .feels_like(feelsLike)
+                                .temp(Integer.parseInt(weatherGovData.getProperties().getPeriods().get(0).getTemperature()))
                                 .temp_min(lowAndHighTemperature.get(0))
                                 .temp_max(lowAndHighTemperature.get(1)).build()
+                ).weather(
+                    List.of(
+                            WeatherData.builder()
+                                    .id(openWeatherData.getWeather().get(0).getId())
+                                    .description(openWeatherData.getWeather().get(0).getDescription())
+                                    .icon(openWeatherData.getWeather().get(0).getIcon())
+                                    .build()
+                    )
                 )
                 .build();
     }
