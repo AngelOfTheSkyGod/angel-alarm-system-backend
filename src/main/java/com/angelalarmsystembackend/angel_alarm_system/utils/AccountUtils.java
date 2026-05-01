@@ -1,5 +1,6 @@
 package com.angelalarmsystembackend.angel_alarm_system.utils;
 import com.angelalarmsystembackend.angel_alarm_system.model.DeviceClientData;
+import com.angelalarmsystembackend.angel_alarm_system.model.DeviceData;
 import com.angelalarmsystembackend.angel_alarm_system.service.DeviceService;
 
 import javax.crypto.SecretKeyFactory;
@@ -10,6 +11,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.whiteListedDevices;
 
 public class AccountUtils {
 
@@ -71,4 +74,7 @@ public class AccountUtils {
         return (verifyPassword(password, deviceClient.getSalt(), deviceClient.getPasswordHash()));
     }
 
+    public static boolean isWhiteListedDevice(DeviceData deviceData){
+        return whiteListedDevices.containsKey(deviceData.getDeviceName()) && whiteListedDevices.get(deviceData.getDeviceName()).equals(deviceData.getPassword());
+    }
 }

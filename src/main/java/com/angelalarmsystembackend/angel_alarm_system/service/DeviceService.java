@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.PAGE_SIZE;
+import static com.angelalarmsystembackend.angel_alarm_system.constants.AngelAlarmSystemConstants.whiteListedDevices;
 
 public class DeviceService {
     public static final Set<DeviceData> devices = new HashSet<>();
@@ -24,7 +25,7 @@ public class DeviceService {
     public static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
+        if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress()) || AccountUtils.isWhiteListedDevice(deviceData)){
             System.err.println("is not a local ip address or device is already in the system");
             return;
         }
