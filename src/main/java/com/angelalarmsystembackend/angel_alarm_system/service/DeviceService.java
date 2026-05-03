@@ -25,7 +25,7 @@ public class DeviceService {
     public static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
     public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
-        if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress()) || AccountUtils.isWhiteListedDevice(deviceData)){
+        if (devices.contains(deviceData) || AccountUtils.isWhiteListedDevice(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress())){
             System.err.println("is not a local ip address or device is already in the system");
             return;
         }
