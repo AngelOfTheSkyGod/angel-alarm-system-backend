@@ -24,7 +24,7 @@ public class DeviceService {
     public static final Map<String, DeviceClientData> deviceNameToDeviceClientData = new HashMap<>();
     public static final Map<String, DeviceClientData> clientToMachineMap = new HashMap<String, DeviceClientData>();
 
-    public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static void connectDevice(DeviceData deviceData) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
         if (devices.contains(deviceData) || IpAddressUtils.isLocalIpAddress(deviceData.getIpAddress()) || AccountUtils.isWhiteListedDevice(deviceData)){
             System.err.println("is not a local ip address or device is already in the system");
             return;
@@ -33,6 +33,31 @@ public class DeviceService {
         System.out.println(deviceData);
         String[] saltAndHash = AccountUtils.storePassword(deviceData.getPassword());
         devices.add(deviceData);
+        Path imagePath = Paths.get("/data/images", deviceData.getDeviceName());
+        System.out.println("image path: " + imagePath);
+        if (Files.exists(imagePath)) {
+            List<String> fileNames = ImageUtils.getFileNames(imagePath.toString(), -1);
+            System.out.println("file names: " + fileNames);
+            for (String fileName : fileNames) {
+                try {
+                    Path filePath = imagePath.resolve(fileName);
+                    System.out.println("file path: " + filePath);
+                    byte[] fileBytes = Files.readAllBytes(filePath);
+                    String base64 = Base64.getEncoder().encodeToString(fileBytes);
+
+                    String dataUrl = "data:image/png;base64," + base64;
+                    System.out.println("data url: " + dataUrl);
+                    addImage(AddImageRequest.builder()
+                            .fileName(fileName)
+                            .imageDataUrl(dataUrl)
+                            .build());
+
+                } catch (Exception e) {
+                    System.err.println("Failed to process image: " + fileName);
+                    e.printStackTrace();
+                }
+            }
+        }
         deviceNameToDeviceClientData.put(deviceData.getDeviceName(), DeviceClientData.builder()
                 .deviceName(deviceData.getDeviceName())
                 .ipAddress(deviceData.getIpAddress())
