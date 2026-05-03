@@ -24,7 +24,7 @@ public class WeatherService {
         this.weatherClient = weatherClient;
     }
 
-    public void setWeather(OpenWeatherData openWeatherData) throws IOException, InterruptedException {
+    public void setWeather(OpenWeatherData openWeatherData, OpenWeatherData openWeatherDataElgin) throws IOException, InterruptedException {
         WeatherGovData weatherGovData = weatherClient.getWeather();
         WeatherGovData apparentTemperatures = weatherClient.getGridPoints();
         List<Integer> lowAndHighTemperature = WeatherUtils.getLowAndMaxTemperature(weatherGovData.getProperties().getPeriods());
@@ -42,6 +42,11 @@ public class WeatherService {
                                     .id(openWeatherData.getWeather().get(0).getId())
                                     .description(openWeatherData.getWeather().get(0).getDescription())
                                     .icon(openWeatherData.getWeather().get(0).getIcon())
+                                    .build(),
+                            WeatherData.builder()
+                                    .id(openWeatherDataElgin.getWeather().get(0).getId())
+                                    .description(openWeatherDataElgin.getWeather().get(0).getDescription())
+                                    .icon(openWeatherDataElgin.getWeather().get(0).getIcon())
                                     .build()
                     )
                 )

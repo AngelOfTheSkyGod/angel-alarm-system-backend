@@ -28,9 +28,7 @@ public class WeatherClient {
         this.env = env;
     }
 
-    public OpenWeatherData getOpenWeatherMapWeather() throws IOException, InterruptedException {
-        String url = "https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&appid=" + env.getProperty("weather.key");
-
+    public OpenWeatherData getOpenWeatherMapWeather(String url) throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
