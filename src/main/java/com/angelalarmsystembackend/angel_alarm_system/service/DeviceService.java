@@ -47,6 +47,8 @@ public class DeviceService {
 
                     addImage(AddImageRequest.builder()
                             .fileName(fileName)
+                            .username(deviceData.getDeviceName())
+                            .password(deviceData.getPassword())
                             .imageDataUrl(base64)
                             .build());
 
