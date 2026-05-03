@@ -25,7 +25,7 @@ public class AngelAlarmSystemController {
     }
 
      @PostMapping("/connectDevice")
-     public void connectDevice(@RequestBody DeviceData data) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+     public void connectDevice(@RequestBody DeviceData data) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, InterruptedException {
          System.out.println("RECEIVED CONNECTION! FROM: " + data.getIpAddress() + " username: " + data.getDeviceName() + " password: " + data.getPassword());
          DeviceService.connectDevice(data);
      }
