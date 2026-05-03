@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
 public class AddImageRequestPi0 extends AddImageRequest {
     private String pathName;
     private String imageDataUrl;
