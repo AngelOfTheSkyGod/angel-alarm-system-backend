@@ -75,6 +75,10 @@ public class AccountUtils {
     }
 
     public static boolean isWhiteListedDevice(DeviceData deviceData){
+        System.out.println("is whitelisted: " + (whiteListedDevices.containsKey(deviceData.getDeviceName()) && whiteListedDevices.get(deviceData.getDeviceName()).equals(deviceData.getPassword())));
+        System.out.println("key: " + deviceData.getDeviceName());
+        System.out.println("whitelisted devices: " + whiteListedDevices.keySet());
+        System.out.println("password: " + deviceData.getPassword());
         return whiteListedDevices.containsKey(deviceData.getDeviceName()) && whiteListedDevices.get(deviceData.getDeviceName()).equals(deviceData.getPassword());
     }
 }
