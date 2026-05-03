@@ -113,7 +113,7 @@ public class DeviceService {
         System.out.println("username: " + addImageRequest.getUsername());
         System.out.println("uid: " + addImageRequest.getUserIdentifier());
         System.out.println("image name: " + addImageRequest.getFileName());
-        if (isInternal || !AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
+        if ((!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())) && !isInternal){
             return null;
         }
         String fileName = addImageRequest.getFileName();
