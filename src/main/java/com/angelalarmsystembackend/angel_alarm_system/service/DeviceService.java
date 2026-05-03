@@ -45,11 +45,9 @@ public class DeviceService {
                     byte[] fileBytes = Files.readAllBytes(filePath);
                     String base64 = Base64.getEncoder().encodeToString(fileBytes);
 
-                    String dataUrl = "data:image/png;base64," + base64;
-                    System.out.println("data url: " + dataUrl);
                     addImage(AddImageRequest.builder()
                             .fileName(fileName)
-                            .imageDataUrl(dataUrl)
+                            .imageDataUrl(base64)
                             .build());
 
                 } catch (Exception e) {
