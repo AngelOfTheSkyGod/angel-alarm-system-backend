@@ -5,10 +5,10 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@SuperBuilder
 public class AddImageRequest extends LoginDetails{
     private String imageDataUrl;
     private String fileName;
