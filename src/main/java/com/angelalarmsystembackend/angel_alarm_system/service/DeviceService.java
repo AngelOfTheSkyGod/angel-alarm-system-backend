@@ -35,6 +35,15 @@ public class DeviceService {
         devices.add(deviceData);
         Path imagePath = Paths.get("/data/images", deviceData.getDeviceName());
         System.out.println("image path: " + imagePath);
+        deviceNameToDeviceClientData.put(deviceData.getDeviceName(), DeviceClientData.builder()
+                .deviceName(deviceData.getDeviceName())
+                .ipAddress(deviceData.getIpAddress())
+                .password(deviceData.getPassword())
+                .width(deviceData.getWidth())
+                .height(deviceData.getHeight())
+                .salt(saltAndHash[0])
+                .passwordHash(saltAndHash[1])
+                .build());
         if (Files.exists(imagePath)) {
             List<String> fileNames = ImageUtils.getFileNames(imagePath.toString(), -1);
             System.out.println("file names: " + fileNames);
@@ -58,15 +67,6 @@ public class DeviceService {
                 }
             }
         }
-        deviceNameToDeviceClientData.put(deviceData.getDeviceName(), DeviceClientData.builder()
-                .deviceName(deviceData.getDeviceName())
-                .ipAddress(deviceData.getIpAddress())
-                .password(deviceData.getPassword())
-                .width(deviceData.getWidth())
-                .height(deviceData.getHeight())
-                .salt(saltAndHash[0])
-                .passwordHash(saltAndHash[1])
-                .build());
     }
 
     public static SlideShowData connectSlideShow(SlideShowRequest slideShowRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
