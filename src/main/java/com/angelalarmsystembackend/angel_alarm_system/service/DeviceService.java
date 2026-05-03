@@ -54,13 +54,11 @@ public class DeviceService {
                     byte[] fileBytes = Files.readAllBytes(filePath);
                     String base64 = Base64.getEncoder().encodeToString(fileBytes);
 
-                    addImage(AddImageRequest.builder()
-                            .fileName(fileName)
-                            .username(deviceData.getDeviceName())
-                            .password(deviceData.getPassword())
+                    ImageSendQueue.enqueue(AddImageRequestPi0.builder()
+                            .pathName("http://" + deviceData.getIpAddress() + "/addImage")
                             .imageDataUrl(base64)
-                            .build(), true);
-
+                            .fileName(fileName)
+                            .build());
                 } catch (Exception e) {
                     System.err.println("Failed to process image: " + fileName);
                     e.printStackTrace();
@@ -109,15 +107,15 @@ public class DeviceService {
     }
 
 
-    public static ImageRequestResponse addImage(AddImageRequest addImageRequest, boolean isInternal) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
+    public static ImageRequestResponse addImage(AddImageRequest addImageRequest) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InterruptedException {
         System.out.println("username: " + addImageRequest.getUsername());
         System.out.println("uid: " + addImageRequest.getUserIdentifier());
         System.out.println("image name: " + addImageRequest.getFileName());
-        if ((!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())) && !isInternal){
+        if (!AccountUtils.isAuthenticated(addImageRequest.getUserIdentifier(), addImageRequest.getUsername(), addImageRequest.getPassword())){
             return null;
         }
         String fileName = addImageRequest.getFileName();
-        Path filePath = Path.of("/data/images/" + deviceNameToDeviceClientData.get(addImageRequest.getUsername()).getDeviceName() + "/" + fileName + ".png");
+        Path filePath = Path.of("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName() + "/" + fileName + ".png");
         boolean exists = Files.exists(filePath);
         if (exists){
             fileName = fileName + UUID.randomUUID();
@@ -125,7 +123,7 @@ public class DeviceService {
         System.out.println("file name: " + fileName + " adding ");
         DeviceClientData deviceClientData = clientToMachineMap.get(addImageRequest.getUserIdentifier());
         BufferedImage image = ImageUtils.makeImage(addImageRequest.getImageDataUrl(), "/data/images/" + deviceClientData.getDeviceName() + "/" + fileName, deviceClientData.getWidth(), deviceClientData.getHeight());
-        Integer numberOfImages = ImageUtils.countFiles("/data/images/" + deviceNameToDeviceClientData.get(addImageRequest.getUsername()).getDeviceName());
+        Integer numberOfImages = ImageUtils.countFiles("/data/images/" + clientToMachineMap.get(addImageRequest.getUserIdentifier()).getDeviceName());
         Integer numberOfPages = (numberOfImages == 0 ? 0 : numberOfImages - 1) / PAGE_SIZE;
         DeviceClientData deviceClient = deviceNameToDeviceClientData.get(addImageRequest.getUsername().toLowerCase());
         String base64Image = ImageUtils.bufferedImageToBase64(image, "png");
