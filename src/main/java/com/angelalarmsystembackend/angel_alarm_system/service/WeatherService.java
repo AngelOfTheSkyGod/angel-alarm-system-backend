@@ -80,7 +80,7 @@ public class WeatherService {
         System.out.println("getting weather data");
         System.out.println(aasData);
         if (aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") || DeviceService.deviceNameToDeviceClientData.get(aasData.getDeviceName()).getPassword().equalsIgnoreCase(aasData.getPassword())){
-            System.out.println("is valid device, requested data: ");
+            System.out.println("is elgin? " + aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") );
             System.out.println(aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") ? openWeatherElginData : openWeatherData);
             return aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") ? openWeatherElginData : openWeatherData;
         }else{
