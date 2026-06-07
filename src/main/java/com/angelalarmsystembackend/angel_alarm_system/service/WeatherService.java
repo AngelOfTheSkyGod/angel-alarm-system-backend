@@ -16,10 +16,12 @@ public class WeatherService {
     @Autowired
     WeatherClient weatherClient;
     public static OpenWeatherData openWeatherData;
+    public static OpenWeatherData openWeatherElginData;
 
     public WeatherService(WeatherClient weatherClient){
         if (openWeatherData == null){
             openWeatherData = new OpenWeatherData();
+            openWeatherElginData = new OpenWeatherData();
         }
         this.weatherClient = weatherClient;
     }
@@ -29,6 +31,28 @@ public class WeatherService {
         WeatherGovData apparentTemperatures = weatherClient.getGridPoints();
         List<Integer> lowAndHighTemperature = WeatherUtils.getLowAndMaxTemperature(weatherGovData.getProperties().getPeriods());
         Integer feelsLike = WeatherUtils.getFeelsLikeTemperature(apparentTemperatures.getProperties().getApparentTemperature().getValues());
+        WeatherService.openWeatherElginData = OpenWeatherData.builder()
+                .main(
+                        TemperatureData.builder()
+                                .feels_like(openWeatherDataElgin.getMain().getFeels_like())
+                                .temp(openWeatherDataElgin.getMain().getTemp())
+                                .temp_min(openWeatherDataElgin.getMain().getTemp_min())
+                                .temp_max(openWeatherDataElgin.getMain().getTemp_max()).build()
+                ).weather(
+                        List.of(
+                                WeatherData.builder()
+                                        .id(openWeatherData.getWeather().get(0).getId())
+                                        .description(openWeatherData.getWeather().get(0).getDescription())
+                                        .icon(openWeatherData.getWeather().get(0).getIcon())
+                                        .build(),
+                                WeatherData.builder()
+                                        .id(openWeatherDataElgin.getWeather().get(0).getId())
+                                        .description(openWeatherDataElgin.getWeather().get(0).getDescription())
+                                        .icon(openWeatherDataElgin.getWeather().get(0).getIcon())
+                                        .build()
+                        )
+                )
+                .build();
         WeatherService.openWeatherData = OpenWeatherData.builder()
                 .main(
                         TemperatureData.builder()
@@ -58,7 +82,7 @@ public class WeatherService {
         if (aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") || DeviceService.deviceNameToDeviceClientData.get(aasData.getDeviceName()).getPassword().equalsIgnoreCase(aasData.getPassword())){
             System.out.println("is valid device, requested data: ");
             System.out.println(openWeatherData);
-            return openWeatherData;
+            return aasData.getDeviceName().equalsIgnoreCase("weather-authorized-machine-1312") ? openWeatherElginData : openWeatherData;
         }else{
             System.out.println("not a valid device.");
             return OpenWeatherData.builder().build();
