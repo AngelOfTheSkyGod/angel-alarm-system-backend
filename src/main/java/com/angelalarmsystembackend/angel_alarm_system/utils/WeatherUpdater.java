@@ -31,6 +31,7 @@ public class WeatherUpdater {
         OpenWeatherData openWeatherDataElgin = weatherClient.getOpenWeatherMapWeather("https://api.openweathermap.org/data/2.5/weather?q=Elgin,US&units=imperial&lang=es&appid=" + env.getProperty("weather.key"));
 
         System.out.println(openWeatherData);
+        System.out.println(openWeatherDataElgin);
         weatherService.setWeather(openWeatherData, openWeatherDataElgin);
     }
 }
